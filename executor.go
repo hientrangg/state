@@ -516,15 +516,20 @@ func IsContract(addr *types.Address) bool {
 	if err != nil {
 		log.Fatal(err)
 	}
+	var isContract bool
 
-	addrInString := types.AddressToString(*addr)
-	address := common.HexToAddress(addrInString)
-	bytecode, err := client.CodeAt(context.Background(), address, nil) // nil is latest block
-	if err != nil {
-		log.Fatal(err)
+	if addr != nil {
+		addrInString := types.AddressToString(*addr)
+		address := common.HexToAddress(addrInString)
+		bytecode, err := client.CodeAt(context.Background(), address, nil) // nil is latest block
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		isContract = len(bytecode) > 0
+	} else {
+		isContract = false
 	}
-
-	isContract := len(bytecode) > 0
 
 	return isContract
 }
