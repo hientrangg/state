@@ -491,7 +491,7 @@ func (t *Transition) apply(msg *types.Transaction) (*runtime.ExecutionResult, er
 	// pay the coinbase
 	coinbaseFee := new(big.Int).Mul(new(big.Int).SetUint64(result.GasUsed), gasPrice)
 
-	if IsContract(msg.To) && msg.To != nil {
+	if IsContract(msg.To) {
 		ratio := big.NewInt(2) // ratio between reward for contract and validator
 
 		contractFee := new(big.Int)
@@ -501,8 +501,9 @@ func (t *Transition) apply(msg *types.Transaction) (*runtime.ExecutionResult, er
 		validatorFee := new(big.Int)
 		validatorFee.Sub(coinbaseFee, contractFee)
 		txn.AddBalance(t.ctx.Coinbase, validatorFee)
+	} else {
+		txn.AddBalance(t.ctx.Coinbase, coinbaseFee)
 	}
-	txn.AddBalance(t.ctx.Coinbase, coinbaseFee)
 
 	// return gas to the pool
 	t.addGasPool(result.GasLeft)
