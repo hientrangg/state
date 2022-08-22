@@ -512,7 +512,7 @@ func (t *Transition) apply(msg *types.Transaction) (*runtime.ExecutionResult, er
 
 func IsContract(addr *types.Address) bool {
 
-	client, err := ethclient.Dial("https://cloudflare-eth.com")
+	client, err := ethclient.Dial("http://localhost:10002")
 	if err != nil {
 		log.Fatal(err)
 	}
