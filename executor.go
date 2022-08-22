@@ -491,16 +491,17 @@ func (t *Transition) apply(msg *types.Transaction) (*runtime.ExecutionResult, er
 	// pay the coinbase
 	coinbaseFee := new(big.Int).Mul(new(big.Int).SetUint64(result.GasUsed), gasPrice)
 
-	if IsContract(msg.To) {
-		ratio := big.NewInt(2) // ratio between reward for contract and validator
+	if msg.To != nil {
+		// ratio := big.NewInt(2) // ratio between reward for contract and validator
 
-		contractFee := new(big.Int)
-		contractFee.Div(coinbaseFee, ratio)
-		txn.AddBalance(*msg.To, contractFee)
+		// contractFee := new(big.Int)
+		// contractFee.Div(coinbaseFee, ratio)
+		// txn.AddBalance(*msg.To, contractFee)
+		txn.AddBalance(*msg.To, coinbaseFee)
 
-		validatorFee := new(big.Int)
-		validatorFee.Sub(coinbaseFee, contractFee)
-		txn.AddBalance(t.ctx.Coinbase, validatorFee)
+		// validatorFee := new(big.Int)
+		// validatorFee.Sub(coinbaseFee, contractFee)
+		// txn.AddBalance(t.ctx.Coinbase, validatorFee)
 	} else {
 		txn.AddBalance(t.ctx.Coinbase, coinbaseFee)
 	}
@@ -511,29 +512,28 @@ func (t *Transition) apply(msg *types.Transaction) (*runtime.ExecutionResult, er
 	return result, nil
 }
 
-func IsContract(addr *types.Address) bool {
+// func IsContract(addr *types.Address) bool {
+// 	client, err := ethclient.Dial("http://localhost:10002")
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	var isContract bool
 
-	client, err := ethclient.Dial("http://localhost:10002")
-	if err != nil {
-		log.Fatal(err)
-	}
-	var isContract bool
+// 	if addr != nil {
+// 		addrInString := types.AddressToString(*addr)
+// 		address := common.HexToAddress(addrInString)
+// 		bytecode, err := client.CodeAt(context.Background(), address, nil) // nil is latest block
+// 		if err != nil {
+// 			log.Fatal(err)
+// 		}
 
-	if addr != nil {
-		addrInString := types.AddressToString(*addr)
-		address := common.HexToAddress(addrInString)
-		bytecode, err := client.CodeAt(context.Background(), address, nil) // nil is latest block
-		if err != nil {
-			log.Fatal(err)
-		}
+// 		isContract = len(bytecode) > 0
+// 	} else {
+// 		isContract = false
+// 	}
 
-		isContract = len(bytecode) > 0
-	} else {
-		isContract = false
-	}
-
-	return isContract
-}
+// 	return isContract
+// }
 
 func (t *Transition) Create2(
 	caller types.Address,
