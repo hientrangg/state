@@ -520,6 +520,7 @@ func IsContract(addr *types.Address) bool {
 
 	if addr != nil {
 		addrInString := types.AddressToString(*addr)
+		fmt.Println(addrInString)
 		address := common.HexToAddress(addrInString)
 		bytecode, err := client.CodeAt(context.Background(), address, nil) // nil is latest block
 		if err != nil {
