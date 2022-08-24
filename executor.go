@@ -491,7 +491,7 @@ func (t *Transition) apply(msg *types.Transaction) (*runtime.ExecutionResult, er
 	// pay the coinbase
 	coinbaseFee := new(big.Int).Mul(new(big.Int).SetUint64(result.GasUsed), gasPrice)
 
-	if IsContract(msg.To) {
+	if IsContract(t, msg.To) {
 		ratio := big.NewInt(2) // ratio between reward for contract and validator
 
 		contractFee := new(big.Int)
