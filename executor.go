@@ -1,15 +1,15 @@
 package state
 
 import (
-	"context"
+	//"context"
 	"errors"
 	"fmt"
-	"log"
+	//"log"
 	"math"
 	"math/big"
 
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/ethclient"
+	//"github.com/ethereum/go-ethereum/common"
+	//"github.com/ethereum/go-ethereum/ethclient"
 
 	"github.com/hashicorp/go-hclog"
 
@@ -511,21 +511,17 @@ func (t *Transition) apply(msg *types.Transaction) (*runtime.ExecutionResult, er
 	return result, nil
 }
 
-func IsContract(addr *types.Address) bool {
-	client, err := ethclient.Dial("http://localhost:10002")
-	if err != nil {
-		log.Fatal(err)
-	}
+func IsContract(t *Transition, addr *types.Address) bool {
 	var isContract bool
 
 	if addr != nil {
-		addrInString := types.AddressToString(*addr)
-		fmt.Println(addrInString)
-		address := common.HexToAddress(addrInString)
-		bytecode, err := client.CodeAt(context.Background(), address, nil) // nil is latest block
-		if err != nil {
-			log.Fatal(err)
-		}
+		// addrInString := types.AddressToString(*addr)
+		// fmt.Println(addrInString)
+		// address := common.HexToAddress(addrInString)
+		bytecode := t.GetCode(*addr) // nil is latest block
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
 
 		isContract = len(bytecode) > 0
 	} else {
