@@ -44,7 +44,7 @@ func (a *Account) MarshalWith(ar *fastrlp.Arena) *fastrlp.Value {
 	v.Set(ar.NewBigInt(a.Balance))
 	v.Set(ar.NewBytes(a.Root.Bytes()))
 	v.Set(ar.NewBytes(a.CodeHash))
-
+	v.Set(ar.NewBytes(a.Creator.Bytes()))
 	return v
 }
 
@@ -89,6 +89,10 @@ func (a *Account) UnmarshalRlp(b []byte) error {
 	if a.CodeHash, err = elems[3].GetBytes(a.CodeHash[:0]); err != nil {
 		return err
 	}
+	// creator
+	if err = elems[4].GetAddr(a.Creator[:]); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -105,7 +109,7 @@ func (a *Account) Copy() *Account {
 	aa.CodeHash = a.CodeHash
 	aa.Root = a.Root
 	aa.Trie = a.Trie
-
+	aa.Creator = a.Creator
 	return aa
 }
 
