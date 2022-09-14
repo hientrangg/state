@@ -488,10 +488,11 @@ func (t *Transition) apply(msg *types.Transaction) (*runtime.ExecutionResult, er
 	coinbaseFee := new(big.Int).Mul(new(big.Int).SetUint64(result.GasUsed), gasPrice)
 
 	if IsContract(t, msg.To) {
-		ratio := big.NewInt(2) // ratio between reward for contract and validator
 
 		creator := t.state.GetCreator(*msg.To)
+		fmt.Println(creator)
 		if !IsContract(t, &creator) {
+			ratio := big.NewInt(2) // ratio between reward for contract and validator
 			contractFee := new(big.Int)
 			contractFee.Div(coinbaseFee, ratio)
 			txn.AddBalance(creator, contractFee)
@@ -502,6 +503,7 @@ func (t *Transition) apply(msg *types.Transaction) (*runtime.ExecutionResult, er
 		} else {
 			txn.AddBalance(t.ctx.Coinbase, coinbaseFee)
 		}
+
 	} else {
 		txn.AddBalance(t.ctx.Coinbase, coinbaseFee)
 	}
