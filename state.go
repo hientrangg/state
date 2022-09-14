@@ -35,6 +35,7 @@ type Account struct {
 	Root     types.Hash
 	CodeHash []byte
 	Trie     accountTrie
+	Creator  types.Address
 }
 
 func (a *Account) MarshalWith(ar *fastrlp.Arena) *fastrlp.Value {
