@@ -9,8 +9,8 @@ import (
 	"github.com/0xPolygon/polygon-edge/chain"
 	"github.com/0xPolygon/polygon-edge/crypto"
 	"github.com/0xPolygon/polygon-edge/helper/keccak"
-	"github.com/0xPolygon/polygon-edge/state/runtime"
 	"github.com/0xPolygon/polygon-edge/types"
+	"github.com/hientrangg/state/runtime"
 )
 
 var emptyStateHash = types.StringToHash("0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421")
@@ -389,6 +389,22 @@ func (txn *Txn) GetNonce(addr types.Address) uint64 {
 	}
 
 	return object.Account.Nonce
+}
+
+// Creator
+
+// AddCreator define creator of the SC address
+func (txn *Txn) AddCreator(addr types.Address, cre types.Address) {
+	txn.upsertAccount(addr, true, func(object *StateObject) {
+		object.Account.Creator = cre
+	})
+}
+
+// GetCreator returns the creator of an SC addr
+func (txn *Txn) GetCreator(addr types.Address) types.Address {
+	object, _ := txn.getStateObject(addr)
+
+	return object.Account.Creator
 }
 
 // Code
