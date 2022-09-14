@@ -490,14 +490,18 @@ func (t *Transition) apply(msg *types.Transaction) (*runtime.ExecutionResult, er
 	if IsContract(t, msg.To) {
 		ratio := big.NewInt(2) // ratio between reward for contract and validator
 
-		creator := t.contractCreator(msg.From, *msg.To, msg.Input, value, gasLeft)
-		contractFee := new(big.Int)
-		contractFee.Div(coinbaseFee, ratio)
-		txn.AddBalance(creator, contractFee)
+		creator := t.state.GetCreator(*msg.To)
+		if !IsContract(t, &creator) {
+			contractFee := new(big.Int)
+			contractFee.Div(coinbaseFee, ratio)
+			txn.AddBalance(creator, contractFee)
 
-		validatorFee := new(big.Int)
-		validatorFee.Sub(coinbaseFee, contractFee)
-		txn.AddBalance(t.ctx.Coinbase, validatorFee)
+			validatorFee := new(big.Int)
+			validatorFee.Sub(coinbaseFee, contractFee)
+			txn.AddBalance(t.ctx.Coinbase, validatorFee)
+		} else {
+			txn.AddBalance(t.ctx.Coinbase, coinbaseFee)
+		}
 	} else {
 		txn.AddBalance(t.ctx.Coinbase, coinbaseFee)
 	}
@@ -521,15 +525,6 @@ func IsContract(t *Transition, addr *types.Address) bool {
 	return isContract
 }
 
-func (t *Transition) contractCreator(caller types.Address,
-	to types.Address,
-	input []byte,
-	value *big.Int,
-	gas uint64,
-) types.Address {
-	c := runtime.NewContractCall(1, caller, caller, to, value, gas, t.state.GetCode(to), input)
-	return c.Creator
-}
 func (t *Transition) Create2(
 	caller types.Address,
 	code []byte,
@@ -663,6 +658,7 @@ func (t *Transition) applyCreate(c *runtime.Contract, host runtime.Host) *runtim
 		// Force the creation of the account
 		t.state.CreateAccount(c.Address)
 		t.state.IncrNonce(c.Address)
+		t.state.AddCreator(c.Address, c.Caller)
 	}
 
 	// Transfer the value
