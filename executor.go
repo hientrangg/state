@@ -660,7 +660,7 @@ func (t *Transition) applyCreate(c *runtime.Contract, host runtime.Host) *runtim
 		// Force the creation of the account
 		t.state.CreateAccount(c.Address)
 		t.state.IncrNonce(c.Address)
-		t.state.AddCreator(c.Address, c.Caller)
+		t.state.AddCreator(c.Address, c.Creator)
 	}
 
 	// Transfer the value
