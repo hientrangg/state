@@ -402,7 +402,10 @@ func (txn *Txn) AddCreator(addr types.Address, cre types.Address) {
 
 // GetCreator returns the creator of an SC addr
 func (txn *Txn) GetCreator(addr types.Address) types.Address {
-	object, _ := txn.getStateObject(addr)
+	object, exists := txn.getStateObject(addr)
+	if !exists {
+		return types.StringToAddress("1")
+	}
 
 	return object.Account.Creator
 }
