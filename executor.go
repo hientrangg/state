@@ -658,9 +658,8 @@ func (t *Transition) applyCreate(c *runtime.Contract, host runtime.Host) *runtim
 
 	if t.config.EIP158 {
 		// Force the creation of the account
-		t.state.CreateAccount(c.Address)
+		t.state.CreateAccount(c.Address, c.Caller)
 		t.state.IncrNonce(c.Address)
-		t.state.AddCreator(c.Address, c.Creator)
 	}
 
 	// Transfer the value
