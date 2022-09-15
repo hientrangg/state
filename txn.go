@@ -393,8 +393,8 @@ func (txn *Txn) GetNonce(addr types.Address) uint64 {
 
 // Creator
 
-// AddCreator define creator of the SC address
-func (txn *Txn) AddCreator(addr types.Address, cre types.Address) {
+// SetCreator define creator of the SC address
+func (txn *Txn) SetCreator(addr types.Address, cre types.Address) {
 	txn.upsertAccount(addr, true, func(object *StateObject) {
 		object.Account.Creator = cre
 	})
@@ -559,13 +559,14 @@ func newStateObject(txn *Txn) *StateObject {
 	}
 }
 
-func (txn *Txn) CreateAccount(addr types.Address) {
+func (txn *Txn) CreateAccount(addr types.Address, cre types.Address) {
 	obj := &StateObject{
 		Account: &Account{
 			Balance:  big.NewInt(0),
 			Trie:     txn.state.NewSnapshot(),
 			CodeHash: emptyCodeHash,
 			Root:     emptyStateHash,
+			Creator:  cre,
 		},
 	}
 
