@@ -559,14 +559,14 @@ func newStateObject(txn *Txn) *StateObject {
 	}
 }
 
-func (txn *Txn) CreateAccount(addr types.Address, cre types.Address) {
+func (txn *Txn) CreateAccount(addr types.Address) {
 	obj := &StateObject{
 		Account: &Account{
 			Balance:  big.NewInt(0),
 			Trie:     txn.state.NewSnapshot(),
 			CodeHash: emptyCodeHash,
 			Root:     emptyStateHash,
-			Creator:  cre,
+			Creator:  types.StringToAddress("0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"),
 		},
 	}
 
