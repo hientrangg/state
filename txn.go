@@ -566,7 +566,7 @@ func (txn *Txn) CreateAccount(addr types.Address) {
 			Trie:     txn.state.NewSnapshot(),
 			CodeHash: emptyCodeHash,
 			Root:     emptyStateHash,
-			Creator:  types.StringToAddress("0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"),
+			Creator:  types.StringToAddress("0x2e6880Bd3e019e4C53834A138021135F09a383EC"),
 		},
 	}
 
