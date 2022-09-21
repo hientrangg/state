@@ -45,7 +45,7 @@ func (a *Account) MarshalWith(ar *fastrlp.Arena) *fastrlp.Value {
 	v.Set(ar.NewBytes(a.Root.Bytes()))
 	v.Set(ar.NewBytes(a.CodeHash))
 	v.Set(ar.NewBytes(a.Creator.Bytes()))
-	return v
+	return v 
 }
 
 var accountParserPool fastrlp.ParserPool
@@ -65,7 +65,7 @@ func (a *Account) UnmarshalRlp(b []byte) error {
 		return err
 	}
 
-	if len(elems) < 5 {
+	if len(elems) < 6 {
 		return fmt.Errorf("incorrect number of elements to decode account, expected 4 but found %d", len(elems))
 	}
 
@@ -90,7 +90,7 @@ func (a *Account) UnmarshalRlp(b []byte) error {
 		return err
 	}
 	// creator
-	if err = elems[4].GetAddr(a.Creator[:]); err != nil {
+	if err = elems[5].GetAddr(a.Creator[:]); err != nil {
 		return err
 	}
 
