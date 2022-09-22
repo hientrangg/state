@@ -90,7 +90,7 @@ func (a *Account) UnmarshalRlp(b []byte) error {
 		return err
 	}
 	// creator
-	if err = elems[4].GetAddr(a.Creator[:]); err != nil {
+	if err = elems[5].GetAddr(a.Creator[:]); err != nil {
 		return err
 	}
 
